@@ -5,14 +5,15 @@
  * @author Javier Paz Sedano
  */
 
-#include <string>
-
 #ifndef ADVENTURE_ROOMS_H
 #define ADVENTURE_ROOMS_H
 
+#include <string>
+#include "loaders.hpp"
+
 using namespace std;
 
-enum Direction { nort, south, east, west, up, down };
+enum Direction { north, south, east, west, up, down };
 
 // Definiciones tempranas de los tipos.
 typedef Map;
@@ -28,8 +29,13 @@ class Map {
       Room* start;
       Room* rooms;
     
-      /** TODO: Buscar una librería de mapeo de YAML y que esto reciba un nodo. */
-      void loadMap();
+      void loadMap(MapLoader);
+
+      /**
+       * Función que comprueba básicamente si todas las habitaciones tienen conexión
+       * y que no haya dead-ends (habitaciones de las que no se puede salir).
+       */
+      bool checkMapIntegrity();
 };
 
 /** Esta estructura representa una habitación de la aventura. */
@@ -40,10 +46,16 @@ struct Room {
   Connection* connections;
 };
 
-/** Esta estructura representa una conexión entre habitaciones. */
+/**
+ * Esta estructura representa una conexión entre habitaciones.
+ * Debe crearse una por cada habitación (es decir una para el origen y otra
+ * para el destino) para poder soportar conexiones unidireccionales y
+ * conexiones en las que el acceso esté bloqueado en una dirección.
+ */
 struct Conection {
   int id;
 
+  Room* origin;
   Room* destination;
   Direction direction;
   bool open;

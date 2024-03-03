@@ -5,13 +5,14 @@
  * @author Javier Paz Sedano
  */
 
+#ifndef ADVENTURE_PUZZLES_H
+#define ADVENTURE_PUZZLES_H
+
 #include <string>
 #include <map>
 #include "objects.hpp"
 #include "rooms.hpp"
-
-#ifndef ADVENTURE_PUZZLES_H
-#define ADVENTURE_PUZZLES_H
+#include "loaders.hpp"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ enum ActionType { USE, PICK, COMBINE, EXAMINE, OPEN, CLOSE, PUSH, PULL, TALK };
 
 // Esto son básicamente todos los cambios en el juego que una acción puede desencadenar.
 enum ReactionType {
-  OPEN, SWITCH_PICKABLE, SPAWN, DESTROY, UPDATE_DESCRIPTION, UPDATE_TAKETEXT, FINISH_MAP
+    OPEN, SWITCH_PICKABLE, SPAWN, DESTROY, UPDATE_DESCRIPTION, UPDATE_TAKETEXT, FINISH_MAP
 };
 
 // Definición temprana de tipos.
@@ -39,21 +40,21 @@ typedef PuzzleManager;
  * cuando sea necesario, realizar acciones sobre el mapa o los objetos.
  */
 class PuzzleManager {
-  public:
-    Map* map;
-    ObjectManager* objManager;
+    public:
+        Map* map;
+        ObjectManager* objManager;
 
-    // Esto representa el conjunto de acciones que tienen algún efecto sobre
-    // el juego.
-    Action* puzzleActions;
+        // Esto representa el conjunto de acciones que tienen algún efecto sobre
+        // el juego.
+        Action* puzzleActions;
 
-    /**
-     * Esta función realiza una acción sobre el mapa y los objetos al
-     * realizar una acción determinada.
-     */
-    string doAction(Action*);
+        /**
+         * Esta función realiza una acción sobre el mapa y los objetos al
+         * realizar una acción determinada.
+         */
+        string doAction(Action*);
 
-    void loadPuzzles(ifstream);
+        void loadPuzzles(PuzzleLoader);
 };
 
 /**
@@ -63,23 +64,23 @@ class PuzzleManager {
  * Usar con y dar algo en realidad es una forma de COMBINE.
  */
 class Action {
-  public:
-    Object object1;
-    Object object2;
-    ActionType type;
-    // Puede haber múltiples reacciones.
-    Reaction* reactions;
+    public:
+        Object object1;
+        Object object2;
+        ActionType type;
+        // Puede haber múltiples reacciones.
+        Reaction* reactions;
 
-    bool compare(Action*);
+        bool compare(Action*);
 };
 
 /** TODO: A lo mejor esto se puede hacer de forma más limpia con herencia */
 class Reaction {
-  PuzzleManager* puzzles;
-  public:
-    string reactionDescription;
+    PuzzleManager* puzzles;
+    public:
+        string reactionDescription;
 
-    virtual void applyAction();
+        virtual void applyAction();
 };
 
 /**
@@ -93,54 +94,54 @@ Reaction makeReaction(ReactionType, map<string, string>);
 
 /** Reacción de que un camino se abra o se cierre. */
 class OpenCloseReaction: public Reaction {
-  bool newValue;
-  int conectionToOpen;
+    bool newValue;
+    int conectionToOpen;
 
-  public:
-    void applyAction();
+    public:
+        void applyAction();
 };
 
 /** Reacción de que un objeto sea recogible (o deje de serlo) */
 class PickableReaction: public Reaction {
-  bool newValue;
-  int objectToChange;
+    bool newValue;
+    int objectToChange;
 
-  public:
-    void applyAction();
+    public:
+        void applyAction();
 };
 
 /** Reacción de hacer aparecer un objeto en el mapa.*/
-class SpawnReaction {
-  int object;
-  int position;
+class SpawnReaction: public Reaction {
+    int object;
+    int position;
 
-  public:
-    void applyAction();
+    public:
+        void applyAction();
 };
 
 /** Reacción de destruir un objeto del mapa. */
-class DestroyReaction {
-  int object;
-  
-  public:
-    void applyAction();
+class DestroyReaction: public Reaction {
+    int object;
+    
+    public:
+        void applyAction();
 };
 
 /** Esta reacción actualiza alguna de las propiedades de un objeto. */
-class UpdateReaction {
-  bool updateDescription;
-  string newDescription;
-  bool updateText;
-  string newTakeText;
+class UpdateReaction: public Reaction {
+    bool updateDescription;
+    string newDescription;
+    bool updateText;
+    string newTakeText;
 
-  public:
-    void applyAction();
+    public:
+        void applyAction();
 };
 
 /** Esta reacción finaliza el mapa y pasamos al siguiente */
-class FinishReaction {
-  public:
-    void applyAction();
+class FinishReaction: public Reaction {
+    public:
+        void applyAction();
 };
 
 #endif // ADVENTURE_PUZZLES_H
