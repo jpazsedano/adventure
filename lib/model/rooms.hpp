@@ -9,6 +9,7 @@
 #define ADVENTURE_ROOMS_H
 
 #include <string>
+#include <list>
 #include "loaders.hpp"
 
 using namespace std;
@@ -27,20 +28,30 @@ typedef Connection;
 class Map {
     public:
       Room* start;
-      Room* rooms;
+      list <Room*> rooms;
+      // Referencia a las conexiones para búsqueda rápida.
+      list <Connection*> connections;
     
-      void loadMap(MapLoader);
+      void loadMap(MapLoader*);
 
       /**
        * Función que comprueba básicamente si todas las habitaciones tienen conexión
        * y que no haya dead-ends (habitaciones de las que no se puede salir).
        */
       bool checkMapIntegrity();
+
+      Room* getRoomById(uint id);
+      Connection* getConnectionById(uint id);
 };
 
-/** Esta estructura representa una habitación de la aventura. */
+/** 
+ * Esta estructura representa una habitación de la aventura.
+ * TODO: Falta representar los huecos donde poner objetos de alguna forma. ¿quizás las ubicaciones
+ * puedan ser simplemente habitaciones? ¿O deberíamos usar algún tipo de abstracción por si en
+ * un futuro queremos complicarlo?
+ */
 struct Room {
-  int id;
+  uint id;
   string name;
   string description;
   Connection* connections;
@@ -53,7 +64,7 @@ struct Room {
  * conexiones en las que el acceso esté bloqueado en una dirección.
  */
 struct Conection {
-  int id;
+  uint id;
 
   Room* origin;
   Room* destination;

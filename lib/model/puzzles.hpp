@@ -10,6 +10,7 @@
 
 #include <string>
 #include <map>
+#include <list>
 #include "objects.hpp"
 #include "rooms.hpp"
 #include "loaders.hpp"
@@ -46,7 +47,7 @@ class PuzzleManager {
 
         // Esto representa el conjunto de acciones que tienen algún efecto sobre
         // el juego.
-        Action* puzzleActions;
+        list <Action*> puzzleActions;
 
         /**
          * Esta función realiza una acción sobre el mapa y los objetos al
@@ -54,7 +55,7 @@ class PuzzleManager {
          */
         string doAction(Action*);
 
-        void loadPuzzles(PuzzleLoader);
+        void loadPuzzles(PuzzleLoader*);
 };
 
 /**
@@ -65,22 +66,23 @@ class PuzzleManager {
  */
 class Action {
     public:
-        Object object1;
-        Object object2;
+        Object* object1;
+        Object* object2;
         ActionType type;
         // Puede haber múltiples reacciones.
-        Reaction* reactions;
+        list <Reaction*> reactions;
 
         bool compare(Action*);
 };
 
 /** TODO: A lo mejor esto se puede hacer de forma más limpia con herencia */
 class Reaction {
-    PuzzleManager* puzzles;
+    protected:
+        PuzzleManager* puzzles;
     public:
         string reactionDescription;
 
-        virtual void applyAction();
+        virtual bool applyAction();
 };
 
 /**
@@ -95,53 +97,55 @@ Reaction makeReaction(ReactionType, map<string, string>);
 /** Reacción de que un camino se abra o se cierre. */
 class OpenCloseReaction: public Reaction {
     bool newValue;
-    int conectionToOpen;
+    uint conectionToOpen;
 
     public:
-        void applyAction();
+        bool applyAction();
 };
 
 /** Reacción de que un objeto sea recogible (o deje de serlo) */
 class PickableReaction: public Reaction {
     bool newValue;
-    int objectToChange;
+    uint objectToChange;
 
     public:
-        void applyAction();
+        bool applyAction();
 };
 
 /** Reacción de hacer aparecer un objeto en el mapa.*/
 class SpawnReaction: public Reaction {
-    int object;
-    int position;
+    uint objectId;
+    uint position;
 
     public:
-        void applyAction();
+        bool applyAction();
 };
 
-/** Reacción de destruir un objeto del mapa. */
+/** Reacción de destruir un objeto del mapa o el inventario. */
 class DestroyReaction: public Reaction {
-    int object;
+    uint objectId;
     
     public:
-        void applyAction();
+        bool applyAction();
 };
 
 /** Esta reacción actualiza alguna de las propiedades de un objeto. */
 class UpdateReaction: public Reaction {
+    uint objectId;
+
     bool updateDescription;
     string newDescription;
-    bool updateText;
+    bool updateTakeText;
     string newTakeText;
 
     public:
-        void applyAction();
+        bool applyAction();
 };
 
 /** Esta reacción finaliza el mapa y pasamos al siguiente */
 class FinishReaction: public Reaction {
     public:
-        void applyAction();
+        bool applyAction();
 };
 
 #endif // ADVENTURE_PUZZLES_H

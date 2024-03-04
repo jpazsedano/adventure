@@ -16,10 +16,13 @@
 // Los includes siempre dentro del condicional, que está ahí precisamente para que esto no pete
 // si metemos una referencia cruzada entre dos ficheros.
 #include "rooms.hpp"
+#include "objects.hpp"
+#include "puzzles.hpp"
+#include <list>
 
 /**
- * Esta clase representa un cargador de mapa que a partir de un fichero YAML
- * devulve las habitaciones y el inicio del mapa.
+ * Esta clase representa un cargador genérico de mapa que a partir de una fuente
+ * devulve las habitaciones y el inicio del mapa (normalmente un fichero).
  */
 class MapLoader {
     public:
@@ -27,7 +30,8 @@ class MapLoader {
 
         void loadMap();
 
-        Room* getRooms();
+        list <Room*> getRooms();
+        list <Connection*> getConnections();
         Room* getStart();
 };
 
@@ -36,7 +40,8 @@ class MapLoader {
 // de forma lógica y ordenada.
 
 /**
- * Cargador de habitaciones que se encarga de recoger sus datos del fichero YAML.
+ * Cargador genérico de habitaciones que se encarga de recoger los datos para una
+ * habitación de una fuente (normalmente un fichero).
  */
 class RoomLoader {
     public:
@@ -50,7 +55,7 @@ class RoomLoader {
 };
 
 /**
- * Cargador de conexiones entre habitaciones.
+ * Cargador genérico de conexiones entre habitaciones.
  */
 class ConnectionLoader {
     public:
@@ -66,12 +71,27 @@ class ConnectionLoader {
         string getClosedText();
 };
 
+/**
+ * Esta clase representa un cargador genérico
+ */
 class ObjectLoader {
-    
+    public:
+        list <Object*> loadObjects();
+        list <Object*> loadInventory();
 };
 
+/**
+ * Cargador genérico para la lógica de puzzles desde una fuente (generalmente un fichero).
+ */
 class PuzzleLoader {
-    
+    ObjectLoader *objLoader;
+    RoomLoader *rLoader;
+
+    public:
+        list <Action*> loadActions();
+
+        Map* loadMap();
+        ObjectManager* loadObjectManager();
 };
 
 #endif // ADVENTURE_LOADERS
