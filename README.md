@@ -8,6 +8,12 @@ idea y decido hacer una aventura gráfica) el motor va a ser modular.
 Se programará en C++ ya que es el lenguaje más versátil para poder ser utilizado en
 cualquier plataforma. Incluso puedo hacer una versión de DOS si me da la gana.
 
+Básicamente implementa una serie de ubicaciones interconectadas por conexiones (que pueden
+estar abiertas o cerradas), objetos interactuables mediante las acciones `TAKE`, `MOVE`,
+`OPEN` y `ACTIVATE` con flags que indican si se puede realizar cada una de las acciones y
+un motor de eventos para poder modificar los flags y descripciones de conexiones y objetos
+bajo ciertas acciones definidas.
+
 Modelo de aventuras
 -------------------
 

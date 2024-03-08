@@ -15,7 +15,9 @@ Elemento base de la descripción y contenedor del resto de elementos.
 
 - `map` <Mapa>: El layout del nivel.
 - `inventory` <Inventario>: El inventario inicial.
-- `triggers` <Trigger>: Los disparadores de eventos.
+- `levelName` <string>: Nombre del nivel.
+- `nextLevel` <string>: Nombre del siguiente nivel. Se puede usar la palabra clave
+`END` para indicar que no hay y que éste es el último nivel.
 
 Mapa
 ----
@@ -23,6 +25,7 @@ Mapa
 Contiene el layout del nivel y los objetos almacenados en él.
 
 - `rooms` <Habitacion (lista)>. Lista de habitaciones.
+- `start` <string>. Nombre de la habitación
 
 Habitacion
 ----------
@@ -42,10 +45,26 @@ el objeto. Open y Activate indican la acción en ambos sentidos.
 
 - `name` <string>: Nombre único del objeto.
 - `description` <string>: Descripción del objeto cuando es examinado.
+- `location` <string>: Texto descriptivo que se utilizará para la descripción de objetos en la sala.
 - `canTake` <bool>: Flag que indica si el objeto puede ser tomado. No hay TakeText ya que si hay un texto al tomarlo, es un evento.
 - `canMove` <bool>: Flag que indica si el objeto puede ser desplazado.
 - `canOpen` <bool>: Flag que indica si el objeto puede ser abierto o puede ser cerrado.
 - `canActivate` <bool>: Flag que indica si el objeto puede ser activado o desactivado.
+- `hidden` <bool>: Por defecto es `false`, pero si se especifica `true`, el objeto se almacenará
+en la lista de objetos no spawneados. Básicamente es un shortcut para poner en un mismo sitio los
+objetos que están en la sala y los que van a aparecer o hacerse visibles en la sala en algún momento.
+- `onTake` <Trigger (lista)>: Triggers que se disparan al recoger el objeto. Ninguno si la
+propiedad no existe.
+- `onMove` <Trigger (lista)>: Ídem para la acción de mover.
+- `onOpen` <Trigger (lista)>: Lo mismito para la acción de abrir.
+- `onActivate` <Trigger (lista)>: También para la acción de activar.
+- `onExamine` <Trigger (lista)>: E incluso para la acción de examinar. Útil para que el personaje se
+de cuenta de la existencia de un objeto al examinar algo.
+- `onCombine` <Trigger (lista)>: Otra posible acción que requiere de reacciones es combinar objetos.
+OJO: Si se pone el evento en ambos objetos, los triggers deben ser idénticos. Si sólo está en uno, el
+evento se aplicará igualmente aunque se haga al reves de cómo se define aquí.
+
+> La omisión de cualquiera de los flags de acción dará por hecho que es `false`.
 
 ListaConexiones
 ---------------
@@ -58,7 +77,7 @@ son opcionales, si se omiten, se considerará que en esa dirección no hay nada.
 - `east` <Conexion>
 - `west` <Conexion>
 - `up` <Conexion>
-- `down' <Conexion>
+- `down` <Conexion>
 
 Conexion
 --------
@@ -67,8 +86,8 @@ Representa una conexión de una habitación con otra y sus propiedades.
 
 - `destination` <string>: El nombre de la habitación a la que se conecta.
 - `open` <bool>: Indicador de si la conexión está inicialmente abierta.
-- `closedText` <string>: Mensaje a mostrar si el jugador intenta pasar estando cerrada. Si se omite se mostrará
-un mensaje genérico.
+- `closedText` <string>: Mensaje a mostrar si el jugador intenta pasar estando cerrada. Si se
+omite se mostrará un mensaje genérico.
 
 Inventario
 ----------
@@ -85,5 +104,7 @@ pueden cambiar.
 
 - `type` <string>. Puede ser `switch_open`, `switch_pick_flag`, `switch_open_flag`, `swtich_move_flag`, `switch_activate_flag`, `spawn`, `destroy` `update` o `finish`.
 - `object_name` <string>. El nombre del objeto sobre el que actuar. Válido para todos los tipos excepto `switch_open` y `finish`.
+- `other_object_name` <string>. Sólo para la acción `combine` que requiere dos objetos.
+- `new_description` <string>. Válido para triggers de tipo `update`.
 - `object_position` <string>. Nombre de la habitación en la que aparece el objeto. Válido para el tipo `spawn`.
 
