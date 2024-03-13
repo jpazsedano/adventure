@@ -17,25 +17,36 @@ Object* ObjectManager::getObjectById(uint id) {
     return NULL;
 }
 
-bool ObjectManager::placeObjectOnInventory(uint id) {
-    // Primero comprobamos si no está ya en el inventario.
-    for(Object *obj : this->inventory) {
-        if(obj->id == id && obj->placeId == PLACE_INVENTORY) {
-            // Devolvemos false porque ya está en el inventario.
-            return false;
+Object* ObjectManager::getObjectByName(string name) {
+    for(Object* obj : this->gameObjects) {
+        if(obj->name == name) {
+            return obj;
         }
     }
 
-    for(Object *obj : this->gameObjects) {
-        if(obj->id == id && obj->canTake) {
-            this->inventory.push_back(obj);
-            obj->placeId = PLACE_INVENTORY;
-            return true;
-        }
-    }
-    // Objeto no encontrado.
-    return false;
+    // Si no se encuentra, devuelve NULL.
+    return NULL;
 }
+
+// bool ObjectManager::placeObjectOnInventory(uint id) {
+//     // Primero comprobamos si no está ya en el inventario.
+//     for(Object *obj : this->inventory) {
+//         if(obj->id == id && obj->placeId == PLACE_INVENTORY) {
+//             // Devolvemos false porque ya está en el inventario.
+//             return false;
+//         }
+//     }
+
+//     for(Object *obj : this->gameObjects) {
+//         if(obj->id == id && obj->canTake) {
+//             this->inventory.push_back(obj);
+//             obj->placeId = PLACE_INVENTORY;
+//             return true;
+//         }
+//     }
+//     // Objeto no encontrado.
+//     return false;
+// }
 
 void ObjectManager::checkObjectsIntegrity() {
     // TODO: Implmentar

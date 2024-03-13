@@ -33,17 +33,17 @@ class ObjectManager {
         /// @brief Obtiene el ID de un objeto a partir de su nombre.
         /// @param name El nombre del objeto.
         /// @return El ID del objeto.
-        uint getObjectByName(string name);
+        Object* getObjectByName(string name);
 
         /// @brief Pues eso, devuelve un objeto a partir de su ID
         /// @param id El ID del objeto que se quiere.
         /// @return Un puntero al objeto en cuestión.
         Object* getObjectById(uint id);
 
-        /// @brief Añade un objeto del juego al inventario
+        /// @brief Añade un objeto del juego al inventario.
         /// @param id El ID del objeto a añadir.
         /// @return Si se ha podido añadir o no.
-        bool placeObjectOnInventory(uint id);
+        //bool placeObjectOnInventory(uint id);
 
         /// @brief Verfica que el estado en el que están los objetos tiene sentido.
         void checkObjectsIntegrity();
