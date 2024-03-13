@@ -165,8 +165,8 @@ bool SwitchStateFlagTrigger::applyTrigger() {
 bool SpawnTrigger::applyTrigger() {
     // Más simple imposible.
     Object* o = this->levelManager->objManager->getObjectById(this->objectId);
-    if(o->placeId == PLACE_NOWHERE) {
-        o->placeId = this->position;
+    if(o->roomId == PLACE_NOWHERE) {
+        o->roomId = this->position;
         return true;
     } else {
         return false;
@@ -177,8 +177,8 @@ bool DestroyTrigger::applyTrigger() {
     // De nuevo, más simple imposible.
     Object* o = this->levelManager->objManager->getObjectById(this->objectId);
 
-    if(o->placeId != PLACE_NOWHERE) {
-        o->placeId = PLACE_NOWHERE;
+    if(o->roomId != PLACE_NOWHERE) {
+        o->roomId = PLACE_NOWHERE;
         return true;
     } else {
         return false;
@@ -191,9 +191,14 @@ bool UpdateTrigger::applyTrigger() {
     if(this->updateDescription) {
         o->description = this->newDescription;
     }
+    if(this->updateLocation) {
+        o->objLocation = this->newLocation;
+    }
+    if(this->updatePosition) {
+        o->roomId = this->newPositionId;
+    }
 
-    // Devolvemos True si ha habido alguna actualización
-    return this->updateDescription || this->updateTakeText;
+    return this->updateDescription || this->updateLocation || this->updatePosition;
 }
 
 bool FinishTrigger::applyTrigger() {
