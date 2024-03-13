@@ -41,13 +41,14 @@ typedef LevelState;
 
 /// @brief Esta clase se encarga de comprobar las acciones que se realizan en el juego para,
 /// cuando sea necesario, realizar acciones sobre el mapa o los objetos.
+/// @todo Creo que nos falta inicializar cosas. Como el state, por ejemplo.
 class LevelManager {
     public:
         Map* map;
         ObjectManager* objManager;
 
         // Variables de estado del nivel.
-        std::map <string, bool> levelState;
+        LevelState* levelState;
 
         // Esto representa el conjunto de acciones que tienen algún efecto sobre
         // el juego.
@@ -127,7 +128,7 @@ class Action {
         string actionText;
         string failedText;
         // Puede haber múltiples reacciones.
-        list <Trigger*> reactions;
+        list <Trigger> triggers;
 
         /// @brief Devuelve si una acción es un tipo de acción sobre un objeto concreto.
         /// @param type El tipo de acción.
@@ -143,7 +144,6 @@ class Action {
         void runTriggers();
 };
 
-/** TODO: A lo mejor esto se puede hacer de forma más limpia con herencia */
 class Trigger {
     protected:
         LevelManager* levelManager;
@@ -198,14 +198,19 @@ class DestroyTrigger: public Trigger {
 };
 
 /// @brief Esta reacción actualiza alguna de las propiedades de un objeto.
-/// @todo Hacer recopilación de todo lo que se debe poder actualizar para ver si esto está bien hecho.
 class UpdateTrigger: public Trigger {
     uint objectId;
 
+    // Los parámetros que se pueden actualizar en un objeto son básicamente su
+    // descripción, ubicación en la sala (location) y ubicación en el mapa (position).
+    // TODO: Quizás sea más descriptivo llamar "psition" a la ubicación en la sala y
+    // "location" a la ubiación en el mapa.
     bool updateDescription;
     string newDescription;
-    bool updateTakeText;
-    string newTakeText;
+    bool updateLocation;
+    string newLocation;
+    bool updatePosition;
+    uint newPositionId;
 
     public:
         bool applyTrigger();

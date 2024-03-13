@@ -53,13 +53,11 @@ class ObjectManager {
 struct Object {
     uint id;
     // Igual que en un espacio de coordenadas el objeto tiene X e Y, aquí tiene ID de posición.
-    uint placeId;
+    uint roomId;
+    string objLocation;
 
     string name;
     string description;
-
-    bool canTake;
-    string takeText;
 };
 
 #endif // ADVENTURE_OBJECTS_H

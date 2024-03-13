@@ -123,16 +123,27 @@ bool LevelState::unregisterOnceStateTrigger(uint triggerId) {
     }
 }
 
+// Aquí tenemos que comprobar si es la misma acción.
 bool Action::isAction(ActionType type, uint objectId) {
-
+    return type == this->type && objectId == this->object1->id;
 }
 
 bool Action::canExecute() {
-
+    bool canExecute = true;
+    for(string condition : this->conditions) {
+        if(!this->manager->levelState->getValue(condition)) {
+            // If there is a single false, we can't execute.
+            return false;
+        }
+    }
+    // If everything was true, we can execute.
+    return true;
 }
 
 void Action::runTriggers() {
-
+    for(Trigger t: this->triggers) {
+        t.applyTrigger();
+    }
 }
 
 bool OpenCloseTrigger::applyTrigger() {
@@ -144,6 +155,10 @@ bool OpenCloseTrigger::applyTrigger() {
     } else {
         return false;
     }
+}
+
+bool SwitchStateFlagTrigger::applyTrigger() {
+    this->levelManager->levelState->switchValue(this->flag);
 }
 
 // TODO: ¿Quizás esta lógica debería ir en la implementación de objeto u objectmanager?
@@ -175,9 +190,6 @@ bool UpdateTrigger::applyTrigger() {
 
     if(this->updateDescription) {
         o->description = this->newDescription;
-    }
-    if(this->updateTakeText) {
-        o->takeText = this->newTakeText;
     }
 
     // Devolvemos True si ha habido alguna actualización
