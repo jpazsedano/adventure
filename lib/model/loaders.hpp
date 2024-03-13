@@ -17,7 +17,7 @@
 // si metemos una referencia cruzada entre dos ficheros.
 #include "rooms.hpp"
 #include "objects.hpp"
-#include "puzzles.hpp"
+#include "levelManager.hpp"
 #include <list>
 
 /**
@@ -83,7 +83,7 @@ class ObjectLoader {
 /**
  * Cargador genérico para la lógica de puzzles desde una fuente (generalmente un fichero).
  */
-class PuzzleLoader {
+class LevelLoader {
     ObjectLoader *objLoader;
     RoomLoader *rLoader;
 

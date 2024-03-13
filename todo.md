@@ -35,12 +35,12 @@ y condiciones. Hay que mirar a ver qué tal funciona. A ver si puedo meter
 descripciones alternativas según una variable de alguna forma...
 
 TODO
-====
+----
 
-- Actualizar el modelo del juego para ajusarse a las nuevas funcionalidades
-requeridas (quizás haya que desglosar esto).
++ Actualizar las cabeceras del modelo a las funcionalidades nuevas (sin probar)
+- Actualizar las implementciones del modelo a las funcionalidades nuevas.
 - Establecer formato de ficheros para ser cargados por el motor.
 - Programar el cargador de niveles del motor.
 - Programar el script de conversión de descripción de nivel.
 - Programar interfaz CLI sencilla para el bucle principal.
-- Terminar nivel de prueba.
++ Terminar nivel de prueba. (Hecho)

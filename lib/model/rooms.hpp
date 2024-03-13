@@ -32,23 +32,28 @@ class Map {
       // Referencia a las conexiones para búsqueda rápida.
       list <Connection*> connections;
     
-      void loadMap(MapLoader*);
+      /// @brief Carga un mapa utilizando un loader.
+      /// @param loader Carga el recurso de mapa y permite recuperar datos de él.
+      void loadMap(MapLoader* loader);
 
-      /**
-       * Función que comprueba básicamente si todas las habitaciones tienen conexión
-       * y que no haya dead-ends (habitaciones de las que no se puede salir).
-       */
+      /// @brief Función que comprueba básicamente si todas las habitaciones tienen conexión
+      /// y que no haya dead-ends (habitaciones de las que no se puede salir).
+      /// @return Indica si el mapa tiene sentido.
       bool checkMapIntegrity();
 
+      /// @brief Obtiene una habitación a partir de su ID
+      /// @param id El ID de la habitación que se quiere obtener.
+      /// @return La habitación. NULL si no existe
       Room* getRoomById(uint id);
+
+      /// @brief Obtiene una conexión a partir de su ID.
+      /// @param id El ID de la conexión a obtener.
+      /// @return La conexión. NULL si no existe.
       Connection* getConnectionById(uint id);
 };
 
 /** 
  * Esta estructura representa una habitación de la aventura.
- * TODO: Falta representar los huecos donde poner objetos de alguna forma. ¿quizás las ubicaciones
- * puedan ser simplemente habitaciones? ¿O deberíamos usar algún tipo de abstracción por si en
- * un futuro queremos complicarlo?
  */
 struct Room {
   uint id;
@@ -66,9 +71,15 @@ struct Room {
 struct Conection {
   uint id;
 
+  // Habitación de origen.
   Room* origin;
+  // Habitación de destino
   Room* destination;
+  // Dirección. ¿Esto va aquí?
   Direction direction;
+  // La conexión en sentido contrario.
+  Conection* opposite;
+
   bool open;
   // Este texto se muestra si se intenta pasar y está cerrado.
   string closedText;

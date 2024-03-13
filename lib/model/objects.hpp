@@ -26,31 +26,30 @@ class ObjectManager {
         list <Object*> inventory;
         list <Object*> gameObjects;
 
-        /**
-         * Carga los objetos con un cargador de objetos.
-         */
-        void loadObjects(ObjectLoader*);
+        /// @brief Carga los objetos con un cargador de objetos
+        /// @param loader El cargador de objetos.
+        void loadObjects(ObjectLoader* loader);
 
-        /**
-         * Pues eso, devuelve un objeto a partir de su ID
-        */
-        Object* getObjectById(uint);
+        /// @brief Obtiene el ID de un objeto a partir de su nombre.
+        /// @param name El nombre del objeto.
+        /// @return El ID del objeto.
+        uint getObjectByName(string name);
 
-        /**
-         * Añade un objeto del juego al inventario.
-         */
-        bool placeObjectOnInventory(uint);
+        /// @brief Pues eso, devuelve un objeto a partir de su ID
+        /// @param id El ID del objeto que se quiere.
+        /// @return Un puntero al objeto en cuestión.
+        Object* getObjectById(uint id);
 
-        /**
-         * Verifica que el estado en el que están los objetos tiene sentido.
-         */
+        /// @brief Añade un objeto del juego al inventario
+        /// @param id El ID del objeto a añadir.
+        /// @return Si se ha podido añadir o no.
+        bool placeObjectOnInventory(uint id);
+
+        /// @brief Verfica que el estado en el que están los objetos tiene sentido.
         void checkObjectsIntegrity();
 };
 
-/**
- * Esta estructura representa un objeto del juego con sus propiedades y su
- * ubicación.
- */
+/// @brief Esta estructura representa un objeto del juego con sus propiedades y su ubicación
 struct Object {
     uint id;
     // Igual que en un espacio de coordenadas el objeto tiene X e Y, aquí tiene ID de posición.
