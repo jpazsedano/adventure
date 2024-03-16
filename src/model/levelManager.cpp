@@ -48,21 +48,25 @@ bool LevelState::getValue(string key) {
 }
 
 void LevelState::applyTriggersFor(string key) {
-    auto tIterator = this->onceTriggers.find(key);
-    if(tIterator != this->onceTriggers.end()) {
+    auto tIterator = this->onceAction.find(key);
+    if(tIterator != this->onceAction.end()) {
         // Ejecutamos los triggers asignados al key.
-        for( Trigger t : tIterator->second ) {
+        for( Action *a : tIterator->second ) {
             // Ejecutamos los triggers asociados al cambio del flag.
-            t.applyTrigger();
+            if( a->canExecute() ) {
+                a->runTriggers();
+            }
         }
         // Y los eliminamos porque éstos sólo se ejecutaon una vez.
-        this->onceTriggers.erase(tIterator);
+        this->onceAction.erase(tIterator);
     }
-    tIterator = this->repeatTriggers.find(key);
-    if(tIterator != this->repeatTriggers.end()) {
+    tIterator = this->repeatAction.find(key);
+    if(tIterator != this->repeatAction.end()) {
         // Igual que el de antes, pero sin eliminarlo.
-        for( Trigger t : tIterator->second ) {
-            t.applyTrigger();
+        for( Action *a : tIterator->second ) {
+            if(a->canExecute()) {
+                a->runTriggers();
+            }
         }
     }
 }
@@ -96,29 +100,30 @@ void LevelState::switchValue(string key) {
     this->applyTriggersFor(key);
 }
 
-void LevelState::registerStateTrigger(string key, Trigger trigger, bool repeat) {
+void LevelState::registerStateAction(string key, Action trigger, bool repeat) {
     if(repeat) {
-        this->repeatTriggers[key].push_back(trigger);
+        this->repeatAction[key].push_back(&trigger);
     } else {
-        this->onceTriggers[key].push_back(trigger);
+        this->onceAction[key].push_back(&trigger);
     }
 }
 
 // TODO: Hay que buscar una forma de declara esto inline.
-class TriggerComparator {
+class SwitchFlagActionComparator {
     public:
         uint id;
-        bool operator() (Trigger t) { return t.id == this->id; }
+        bool operator() (Action a) { return a.actionId == this->id; }
 };
 
-bool LevelState::unregisterOnceStateTrigger(uint triggerId) {
-    TriggerComparator triggerCompare = {triggerId};
+// TODO: Arreglar esto.
+bool LevelState::unregisterStateAction(uint actionId) {
+    SwitchFlagActionComparator triggerCompare = {actionId};
 
-    for(pair <string, list<Trigger>> p : this->repeatTriggers) {
+    for(pair <string, list<Action*>> p : this->repeatAction) {
         p.second.remove_if(triggerCompare);
     }
     // Repetimos para los triggers de una sola ejecución.
-    for(pair <string, list<Trigger>> p : this->onceTriggers ) {
+    for(pair <string, list<Action*>> p : this->onceAction ) {
         p.second.remove_if(triggerCompare);
     }
 }

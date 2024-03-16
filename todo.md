@@ -38,9 +38,10 @@ TODO
 ----
 
 + Actualizar las cabeceras del modelo a las funcionalidades nuevas (sin probar)
-- Actualizar las implementciones del modelo a las funcionalidades nuevas.
++ Actualizar las implementciones del modelo a las funcionalidades nuevas (sin probar)
 - Establecer formato de ficheros para ser cargados por el motor.
 - Programar el cargador de niveles del motor.
 - Programar el script de conversión de descripción de nivel.
 - Programar interfaz CLI sencilla para el bucle principal.
+- Hacer un makefile simple.
 + Terminar nivel de prueba. (Hecho)

@@ -18,7 +18,7 @@
 using namespace std;
 
 // Este enum en relidad representa todos los tipos de acciones realiables en todo momento.
-enum ActionType { PICK_UP, MOVE, OPEN, CLOSE, USE, EXAMINE, COMBINE, TALK};
+enum ActionType { PICK_UP, MOVE, OPEN, CLOSE, USE, EXAMINE, COMBINE, TALK, SWITCHFLAG };
 
 // Esto son básicamente todos los cambios en el juego que una acción puede desencadenar.
 enum ReactionType {
@@ -77,8 +77,10 @@ class LevelState {
     map <string, bool> state;
 
     // Triggers que se disparan con cambios en el state.
-    map <string, list <Trigger>> onceTriggers;
-    map <string, list <Trigger>> repeatTriggers;
+    // Son referencias para reutilizar la misma instancia para todas las
+    // repeticiones de la misma.
+    map <string, list <Action*>> onceAction;
+    map <string, list <Action*>> repeatAction;
 
     /// @brief Aplica los triggers para una clave específica (si los hay)
     /// @param key La clave para la que ejecutar los triggers.
@@ -101,13 +103,13 @@ class LevelState {
         void switchValue(string flag);
         /// @brief Registra un trigger para ser lanzado cuando el estado cambie.
         /// @param flag El flag a monitorear.
-        /// @param trigger El trigger a lanzar.
+        /// @param action El trigger a lanzar.
         /// @param repeat Si quieres que se ejecute una única vez o repetidamente con cada cambio.
-        void registerStateTrigger(string flag, Trigger trigger, bool repeat);
+        void registerStateAction(string flag, Action action, bool repeat);
         /// @brief Elimina un trigger del registro.
-        /// @param triggerId El ID del trigger a eliminar.
+        /// @param actionId El ID del trigger a eliminar.
         /// @return bool indicando si ha podido ser eliminado o no.
-        bool unregisterOnceStateTrigger(uint triggerId);
+        bool unregisterStateAction(uint actionId);
 };
 
 /// @brief La clase Action se encarga de guardar una acción que desencadena una
@@ -116,6 +118,8 @@ class LevelState {
 /// Usar con y dar algo en realidad es una forma de COMBINE.
 class Action {
     public:
+        uint actionId;
+
         // TODO: Quizás algunas de, o todos estos atributos deban ser privados.
         LevelManager* manager;
         ActionType type;
@@ -184,6 +188,7 @@ class SwitchStateFlagTrigger: public Trigger {
 class SpawnTrigger: public Trigger {
     uint objectId;
     uint position;
+    string locationText;
 
     public:
         bool applyTrigger();

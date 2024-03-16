@@ -52,7 +52,8 @@ el objeto. Open y Activate indican la acción en ambos sentidos.
 - `description` <string>: Descripción del objeto cuando es examinado.
 - `location` <string>: Texto descriptivo que se utilizará para la descripción de objetos en la sala.
 - `actions` <Action (lista)>: Acciones que se pueden realizar sobre el objeto. La omisión de una
-acción implica que no se puede hacer y mostrará un mensaje genérico para ella.
+acción implica que no se puede hacer y mostrará un mensaje genérico para ella, salvo la acción de
+examinar.
 - `hidden` <bool>: Por defecto es `false`, pero si se especifica `true`, el objeto se almacenará
 en la lista de objetos no spawneados. Básicamente es un shortcut para poner en un mismo sitio los
 objetos que están en la sala y los que van a aparecer o hacerse visibles en la sala en algún momento.
@@ -141,8 +142,7 @@ StateTrigger
 
 Básicamente define unas condiciones del estado y, cuando se cumplen, se ejecuta.
 
-- `positiveConditions` <string (lista)>: Flags que tienen que ser positivas para que se ejecute
-- `negativeConditions` <string (lista)>: Flags que tienen que ser negativas para que se ejecute
+- `conditions` <string (lista)>: Flags que tienen que ser positivas para que se ejecute
 - `mode` <string>: Puede ser `once` o `repeat`. No estoy seguro de para qué puede usarse el modo
 repeat, pero lo pongo por si acaso. Si se omite, se presupone `once`. Básicamente en modo once,
 cuando se alcancen las condiciones la primera vez, se lanzarán los triggers y se desactivará. En

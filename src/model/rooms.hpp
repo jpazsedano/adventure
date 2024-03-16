@@ -27,6 +27,7 @@ typedef Connection;
  */
 class Map {
     public:
+      // ¿Esto debería ser un puntero o referencia por ID?
       Room* start;
       list <Room*> rooms;
       // Referencia a las conexiones para búsqueda rápida.
@@ -59,7 +60,8 @@ struct Room {
   uint id;
   string name;
   string description;
-  Connection* connections;
+
+  list<Connection*> conections;
 };
 
 /**
